@@ -9,38 +9,76 @@
       You can execute any Python code. Just enter something in the box below and
       click the button.
     </p>
-    <input id="code" value="sum([1, 2, 3, 4, 5])" />
-    <button onclick="evaluatePython()">Run</button>
+    <!-- <input id="code" value="sum([1, 2, 3, 4, 5])" /> -->
+    <div>
+      <button onclick="Run()">Run</button>
+      <button onclick="Start()">Start</button>
+      <button onclick="Next()">Next</button>
+    </div>
+    <textarea id="code" style="width: 50%" rows="10">
+sum([1, 2, 3, 4, 5])</textarea
+    >
     <br />
     <br />
     <div>Output:</div>
-    <textarea id="output" style="width: 100%" rows="6" disabled></textarea>
+    <textarea id="output" style="width: 100%" rows="20" disabled></textarea>
 
     <script>
       const output = document.getElementById("output");
       const code = document.getElementById("code");
 
-      function addToOutput(s) {
-        output.value += ">>>" + code.value + "\n" + s + "\n";
-      }
-
-      output.value = "Initializing...\n";
-      // init Pyodide
-      async function main() {
-        let pyodide = await loadPyodide();
-        output.value += "Ready!\n";
-        return pyodide;
-      }
-      let pyodideReadyPromise = main();
-
-      async function evaluatePython() {
-        let pyodide = await pyodideReadyPromise;
+      async function Run() {
+        output.value = "Initializing...\n";
+        pyodide = await loadPyodide();
         try {
-          let output = pyodide.runPython(code.value);
-          addToOutput(output);
+          output.value = pyodide.runPython(code.value);
         } catch (err) {
-          addToOutput(err);
+          output.value = err;
         }
+      }
+
+      let pyodide = 0;
+
+      async function Start() {
+        output.value = "Initializing...\n";
+        pyodide = await loadPyodide();
+        pyodide.loadPackage("asyncio");
+        pyodide.loadPackage("numpy");
+        output.value = "packages loaded!";
+
+        pyodide.runPython("import asyncio\n");
+        console.log("asyncio imported");
+        output.value = "asyncio imported";
+
+        // try {
+        //   output.value = pyodide.runPython("import numpy\n");
+        // } catch (err) {
+        //   output.value = err;
+        // }
+        output.value = pyodide.runPython("import numpy\n");
+        console.log("numpy imported");
+        output.value = "numpy imported";
+
+        try {
+          output.value = pyodide.runPython("queue = asyncio.Queue()");
+        } catch (err) {
+          output.value = err;
+        }
+        output.value = "Ready!\n";
+
+        let cmd = pyodide.runPythonAsync(`
+          cmd = queue.get()
+          return cmd
+        `);
+
+        let cmdd = await cmd;
+        output.value = "#" + cmdd + "#";
+      }
+
+      async function Next() {
+        pyodide.runPython(`
+          queue.put('next')
+        `);
       }
     </script>
   </body>
