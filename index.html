@@ -12,8 +12,15 @@
     <!-- <input id="code" value="sum([1, 2, 3, 4, 5])" /> -->
     <div>
       <button onclick="Run()">Run</button>
-      <button onclick="Start()">Start</button>
+      <!-- <button id="start/stop button" , onclick="Start()">Start</button> -->
+      <input
+        id="start/stop button"
+        type="button"
+        value="Start"
+        onclick="Start()"
+      />
       <button onclick="Next()">Next</button>
+      <button onclick="Over()">Over</button>
     </div>
     <textarea id="code" style="width: 50%" rows="10">
 sum([1, 2, 3, 4, 5])</textarea
@@ -26,6 +33,7 @@ sum([1, 2, 3, 4, 5])</textarea
     <script>
       const output = document.getElementById("output");
       const code = document.getElementById("code");
+      const button = document.getElementById("start/stop button");
 
       async function Run() {
         output.value = "Initializing...\n";
@@ -37,48 +45,55 @@ sum([1, 2, 3, 4, 5])</textarea
         }
       }
 
-      let pyodide = 0;
+      var _promote;
+      var is_running = false;
 
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
       async function Start() {
-        output.value = "Initializing...\n";
-        pyodide = await loadPyodide();
-        pyodide.loadPackage("asyncio");
-        pyodide.loadPackage("numpy");
-        output.value = "packages loaded!";
-
-        pyodide.runPython("import asyncio\n");
-        console.log("asyncio imported");
-        output.value = "asyncio imported";
-
-        // try {
-        //   output.value = pyodide.runPython("import numpy\n");
-        // } catch (err) {
-        //   output.value = err;
-        // }
-        output.value = pyodide.runPython("import numpy\n");
-        console.log("numpy imported");
-        output.value = "numpy imported";
-
-        try {
-          output.value = pyodide.runPython("queue = asyncio.Queue()");
-        } catch (err) {
-          output.value = err;
+        if (is_running) {
+          is_running = false;
+          _promote("stop");
+          button.value = "Start";
+          return;
         }
-        output.value = "Ready!\n";
+        is_running = true;
+        button.value = "Stop";
+        let hash = Math.floor(Math.random() * 1000);
+        var type;
 
-        let cmd = pyodide.runPythonAsync(`
-          cmd = queue.get()
-          return cmd
-        `);
-
-        let cmdd = await cmd;
-        output.value = "#" + cmdd + "#";
+        output.value += hash + ": waiting...\n";
+        while (true) {
+          var promise = new Promise((resolve) => {
+            _promote = resolve;
+          });
+          await promise.then((result) => {
+            type = result;
+          });
+          // console.log("after .then");
+          if (type === undefined) type = "Q";
+          if (type == "next") output.value += hash + ": next!\n";
+          else if (type == "over") output.value += hash + ": over!\n";
+          else if (type == "stop") {
+            output.value += hash + ": stopped\n";
+            break;
+          } else output.value = "unexpected: " + type;
+          // await sleep(1000);
+          output.value += hash + ": tick\n";
+        }
       }
 
       async function Next() {
-        pyodide.runPython(`
-          queue.put('next')
-        `);
+        _promote("next");
+      }
+
+      async function Over() {
+        _promote("over");
+      }
+
+      async function Stop() {
+        _promote("stop");
       }
     </script>
   </body>
