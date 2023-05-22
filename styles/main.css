@@ -1,0 +1,281 @@
+button {
+  cursor: pointer;
+}
+.container {
+  display: flex;
+  height: 97vh; /* Задаем высоту контейнера равной высоте экрана */
+}
+.horizontal-div {
+  height: 100%; /* Задаем высоту div равной высоте контейнера */
+  /* border: 1px solid #000; */
+}
+.first-div {
+  width: 30%; /* Задаем ширину первого div */
+}
+.second-div {
+  width: 8%; /* Задаем ширину второго div */
+}
+.third-div {
+  width: 62%; /* Задаем ширину второго div */
+}
+.scrolling-window {
+  width: 100%; /* Ширина окна */
+  height: 100%; /* Высота окна */
+  border: 1px solid #000; /* Рамка окна */
+  overflow-y: scroll; /* Включение вертикальной прокрутки */
+  /*  padding: 1em; Добавление внутреннего отступа */
+}
+
+.scrolling-window ul {
+  list-style-type: none; /* Удаление маркеров списка */
+  margin: 0;
+  padding: 0;
+}
+
+.scrolling-window li {
+  margin-bottom: 8px; /* Отступы между элементами */
+}
+
+.list_python_variable {
+  width: 100%;
+  padding-bottom: 50%;
+  border: 1px solid #000;
+  border-radius: 5px;
+
+  padding: 0.5em;
+  background-color: #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+}
+
+.move {
+  position: absolute;
+  z-index: 1;
+  top: 50px;
+  left: 50px;
+  width: 150px;
+  height: 50px;
+  background-color: #ffffff;
+  border: 2px;
+  border-style: double;
+  color: #000;
+}
+.moving {
+  position: absolute;
+  z-index: 3;
+  top: 50px;
+  left: 50px;
+  width: 150px;
+  height: 50px;
+  background-color: #ff6666;
+  border: 2px;
+  border-style: dotted;
+  color: #aaffee;
+}
+.hp {
+  position: absolute;
+  z-index: 50;
+  top: 15px;
+  left: 15px;
+}
+/* body {
+  cursor: default;
+  background-color: #0000ff;
+  color: #dddddd;
+  font-size: 16px;
+  margin: 0px;
+  padding: 0px;
+} */
+a:link {
+  color: #ffffff;
+}
+a:visited {
+  color: #ffffff;
+}
+a:hover {
+  color: #ffa3d8;
+}
+a:active {
+  color: #a0d0ff;
+}
+#otop {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+  width: 99%;
+  height: 20px;
+  text-align: right;
+}
+
+.container1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  /* background-color: #f1f1f1; */
+}
+
+.loader {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  width: 100px;
+  height: 30px;
+
+  /* display: none; */
+  position: absolute;
+  z-index: 10; /* Указать высокий z-index, чтобы анимация была поверх всех объектов в animation_area */
+  top: 50%;
+  left: 65%;
+  transform: translate(
+    -50%,
+    -50%
+  ); /* Смещение на 50% своего размера для точного центрирования */
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  background-color: #3498db;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.circle:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.circle:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+.CodeMirror {
+  font-size: 16px;
+  width: 100%;
+  height: 100%;
+}
+
+.highlighted {
+  background-color: rgb(227, 234, 236);
+}
+
+.slider-container {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  user-select: none;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  background: #d3d3d3;
+  outline: none;
+  border-radius: 5px;
+  transform: rotate(-90deg);
+  margin-top: 100px;
+  transition: background 0.3s;
+}
+
+.slider:hover {
+  background: #a9a9a9;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #4c68af;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #4c68af;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.slider:hover::-webkit-slider-thumb {
+  background: #3d5fbb;
+}
+
+.slider:hover::-moz-range-thumb {
+  background: #3d5fbb;
+}
+
+.slider-container label {
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.slider-container:hover label {
+  color: #a9a9a9;
+}
+
+.my_button {
+  /* width: 100%; Растягиваем кнопку на всю ширину родительского div */
+  padding: 10px;
+  text-align: center;
+  background-color: royalblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.my_button:hover {
+  background-color: dodgerblue;
+}
+
+.button-container {
+  display: flex; /* Устанавливаем display: flex для горизонтального выравнивания дочерних элементов */
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.button-wrapper {
+  flex: 1; /* Задаем каждому .button-wrapper одинаковую ширину */
+}
+
+.half-width-button {
+  width: 100%; /* Растягиваем кнопку на всю ширину .button-wrapper */
+  padding: 10px;
+  text-align: center;
+  background-color: royalblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.half-width-button:hover {
+  background-color: dodgerblue;
+}

@@ -1,0 +1,71 @@
+.python_variable {
+  position: absolute;
+  padding: 20px;
+  background-color: lightgrey;
+  border-radius: 5px;
+  top: 0;
+  left: 0;
+  cursor: move;
+  display: none;
+  flex-direction: column;
+  gap: 0.75em;
+  align-items: center;
+  justify-content: center;
+}
+
+.pyvar-box-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.pyvar-text {
+  font-size: 100%;
+  text-align: center;
+  font-size: 40px;
+}
+
+.pyvar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-left: 1em;
+}
+
+.pyvar-buttons button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px; /* или любой другой размер, который вы хотите */
+  height: 30px; /* или любой другой размер, который вы хотите */
+  background-color: lightgrey;
+  border: 1px solid lightgrey;
+  cursor: pointer;
+}
+
+.pyvar-add_variable_list {
+  display: none;
+  width: 100%;
+  padding-left: 20px;
+  list-style-type: none;
+  overflow-y: scroll;
+}
+
+.pyvar-add_variable_list li {
+  padding: 0.5em;
+  background-color: #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+}
+
+.line_handler {
+  /* position: absolute; */
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px; /* размер круга */
+  height: 15px;
+  background-color: black; /* цвет круга */
+  border-radius: 50%;
+}

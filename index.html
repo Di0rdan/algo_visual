@@ -2,99 +2,190 @@
 <html>
   <head>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.1/full/pyodide.js"></script>
+    <link rel="stylesheet" href="./codemirror5-3/lib/codemirror.css" />
+    <link rel="stylesheet" href="./codemirror5-3/theme/monokai.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/variables.css" />
+    <script src="./codemirror5-3/lib/codemirror.js"></script>
+    <script src="./codemirror5-3/mode/python/python.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
   </head>
 
   <body>
-    <p>
-      You can execute any Python code. Just enter something in the box below and
-      click the button.
-    </p>
-    <!-- <input id="code" value="sum([1, 2, 3, 4, 5])" /> -->
-    <div>
-      <button onclick="Run()">Run</button>
-      <!-- <button id="start/stop button" , onclick="Start()">Start</button> -->
-      <input
-        id="start/stop button"
-        type="button"
-        value="Start"
-        onclick="Start()"
-      />
-      <button onclick="Next()">Next</button>
-      <button onclick="Over()">Over</button>
+    <div class="container">
+      <div class="horizontal-div first-div">
+        <!-- <div style="height: 5%; border: 1px solid #000"> -->
+
+        <!-- </div> -->
+        <div style="display: flex; width: 100%; height: 70%">
+          <textarea id="code"> </textarea>
+        </div>
+        <input
+          id="vis button"
+          type="button"
+          value="visualize"
+          onclick="load()"
+          class="my_button"
+          style="width: 100%"
+        />
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            height: 25%;
+          "
+        >
+          <textarea
+            id="input"
+            style="flex-grow: 1; margin-right: 10px; resize: none"
+          >
+5 5
+0 1
+1 2
+2 3
+3 0
+2 4</textarea
+          >
+          <textarea
+            id="output"
+            style="flex-grow: 1; resize: none"
+            disabled="true"
+          ></textarea>
+        </div>
+      </div>
+      <div class="horizontal-div second-div">
+        <div class="scrolling-window">
+          <ul id="variables_list">
+            <li
+              class="list_python_variable"
+              draggable="true"
+              style="display: none"
+              id="list_python_variable_template"
+            ></li>
+          </ul>
+        </div>
+      </div>
+      <div class="horizontal-div third-div">
+        <div class="button-container" style="height: 8%">
+          <div class="button-wrapper">
+            <button class="half-width-button" onclick="prev()"><< prev</button>
+          </div>
+          <div class="button-wrapper">
+            <button class="half-width-button" onclick="next()">next >></button>
+          </div>
+        </div>
+
+        <!-- <div
+          class="python_variable draggable"
+          style="display: none"
+          id="python_variable_template"
+        ></div> -->
+
+        <div
+          class="python_variable"
+          id="python_variable_template"
+          onmouseover="highlight(this)"
+          onmouseout="remove_highlight(this)"
+        >
+          <div class="pyvar-box-content">
+            <div class="pyvar-text">Текст</div>
+            <div class="pyvar-buttons">
+              <button onclick="remove_variable(this)">
+                <span class="material-icons"> cancel </span>
+              </button>
+              <!-- <button>Кнопка 2</button> -->
+              <button id="toggleListButton" onclick="show_list(this)">
+                <span class="material-icons"> more_vert </span>
+              </button>
+            </div>
+          </div>
+          <ul class="pyvar-add_variable_list">
+            <!-- <li>Пункт списка 1</li> -->
+          </ul>
+        </div>
+
+        <div
+          class="container1"
+          id="animation_area"
+          style="
+            height: 92%;
+            width: 100%;
+            border: 1px solid #000;
+            align-items: center;
+          "
+        >
+          <svg
+            id="line_storage"
+            width="100%"
+            height="100%"
+            style="pointer-events: none; z-index: 11"
+          >
+            <defs>
+              <marker
+                id="arrow"
+                viewBox="0 0 10 10"
+                refX="5"
+                refY="5"
+                markerWidth="20"
+                markerHeight="20"
+                orient="auto-start-reverse"
+              >
+                <path d="M 0 3 L 10 5 L 0 7 Z" fill="black" />
+              </marker>
+            </defs>
+            <path
+              id="line_template"
+              style="display: none"
+              d="M50 50 L200 200 350 350"
+              stroke="black"
+              fill="none"
+              marker-end="url(#arrow)"
+            />
+          </svg>
+
+          <div class="slider-container">
+            <input
+              type="range"
+              id="sizeSlider"
+              class="slider"
+              min="0.5"
+              max="2"
+              step="0.01"
+              value="1"
+            />
+          </div>
+          <div id="loader" class="loader">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <textarea id="code" style="width: 50%" rows="10">
-sum([1, 2, 3, 4, 5])</textarea
-    >
-    <br />
-    <br />
-    <div>Output:</div>
-    <textarea id="output" style="width: 100%" rows="20" disabled></textarea>
-
-    <script>
-      const output = document.getElementById("output");
-      const code = document.getElementById("code");
-      const button = document.getElementById("start/stop button");
-
-      async function Run() {
-        output.value = "Initializing...\n";
-        pyodide = await loadPyodide();
-        try {
-          output.value = pyodide.runPython(code.value);
-        } catch (err) {
-          output.value = err;
-        }
-      }
-
-      var _promote;
-      var is_running = false;
-
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-      async function Start() {
-        if (is_running) {
-          is_running = false;
-          _promote("stop");
-          button.value = "Start";
-          return;
-        }
-        is_running = true;
-        button.value = "Stop";
-        let hash = Math.floor(Math.random() * 1000);
-        var type;
-
-        output.value += hash + ": waiting...\n";
-        while (true) {
-          var promise = new Promise((resolve) => {
-            _promote = resolve;
-          });
-          await promise.then((result) => {
-            type = result;
-          });
-          // console.log("after .then");
-          if (type === undefined) type = "Q";
-          if (type == "next") output.value += hash + ": next!\n";
-          else if (type == "over") output.value += hash + ": over!\n";
-          else if (type == "stop") {
-            output.value += hash + ": stopped\n";
-            break;
-          } else output.value = "unexpected: " + type;
-          // await sleep(1000);
-          output.value += hash + ": tick\n";
-        }
-      }
-
-      async function Next() {
-        _promote("next");
-      }
-
-      async function Over() {
-        _promote("over");
-      }
-
-      async function Stop() {
-        _promote("stop");
-      }
-    </script>
+    <!-- <script src="script/globals.js"></script>
+    <script src="py_lib/tracer.js"></script>
+    <script src="py_lib/animation_builder.js"></script>
+    <script src="script/variables.js"></script>
+    <script src="script/moving.js"></script>
+    <script src="script/examples.js"></script>
+    <script src="script/draw_frame.js"></script>
+    <script src="script/main.js"></script> -->
+    <script src="py_lib/tracer.js"></script>
+    <script src="py_lib/animation_builder.js"></script>
+    <script src="script2/animation.js"></script>
+    <script src="script2/main.js"></script>
+    <script src="script2/code_editor.js"></script>
+    <script src="script2/draw_frame.js"></script>
+    <script src="script2/html_variable.js"></script>
+    <script src="script2/list_variable.js"></script>
+    <script src="script2/load.js"></script>
+    <script src="script2/moving.js"></script>
+    <script src="script2/lines.js"></script>
+    <script src="script2/py_obj.js"></script>
+    <script src="script2/scale.js"></script>
   </body>
 </html>
