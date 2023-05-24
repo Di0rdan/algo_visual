@@ -5,10 +5,9 @@ function highlight_code_line(line_num) {
   return highlightedLine;
 }
 
-python_example_code = `a = [1, 2, 3]
-b = {1, 2, 3}
-c = {'a': a, 'b': b, '1': 1}
-d = (1, 2, 3)
+python_example_code = `a = []
+b = a
+a.append(a)
 `;
 
 function set_code(code) {

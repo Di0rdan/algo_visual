@@ -1,8 +1,9 @@
 function get_tracing_lib() {
+  console.log(editor.getValue() + '\npass');
   return {
     tracer: tracer_py,
     animation_builder: animation_builder_py,
-    script: editor.getValue(),
+    script: editor.getValue() + '\npass',
   };
 }
 

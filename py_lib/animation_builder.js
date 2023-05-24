@@ -2,7 +2,10 @@ animation_builder_py = `from typing import Any
 import sys
 
 def get_repr(value):
-    return value.__class__.__name__[:8]
+    value_repr = ''
+    if type(value) in [int, float, str, None]:
+        value_repr = str(value)
+    return 'class ' + value.__class__.__name__[:8] + '#' + value_repr
 
 def get_trace_attrs(value):
     # print(f'trying to get attrs of: {type(value)}')

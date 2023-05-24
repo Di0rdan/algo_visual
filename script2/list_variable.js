@@ -44,10 +44,10 @@ class ListVariable {
 
   update_line(to_htmlvar) {
     let line = this.lines.get(to_htmlvar);
-    let to = to_htmlvar.html_obj;
+    let to = to_htmlvar.html_point;
     let from = this.html_obj;
     if (this.html_ul.style.display == "none") {
-      from = this.html_ul.parentElement;
+      from = this.html_ul.parentElement.children[0];
     }
     update_line(from, to, line);
   }

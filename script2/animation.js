@@ -94,7 +94,7 @@ class Animation {
   }
 
   next() {
-    if (this.frame_num == this.frames.length) {
+    if (this.frame_num + 1 == this.frames.length) {
       console.log("no next frame");
       return;
     }

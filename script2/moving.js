@@ -20,7 +20,7 @@ animation_area.addEventListener("drop", (event) => {
   const draggedObject = document.getElementById(objectId);
   let id = draggedObject.id.slice(5);
   if (!document.getElementById(id)) {
-    console.log("drop", event.clientX, event.clientY);
+    // console.log("drop", event.clientX, event.clientY);
     animation.create_htmlvar(event, id);
   }
 });

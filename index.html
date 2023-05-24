@@ -91,8 +91,13 @@
           onmouseover="highlight(this)"
           onmouseout="remove_highlight(this)"
         >
+          <div class="circle_pyvar"></div>
           <div class="pyvar-box-content">
-            <div class="pyvar-text">Текст</div>
+            <div class="pyvar-text">
+              <p class="pyvar_path_row">path</p>
+              <p class="pyvar_type_row">type</p>
+              <p class="pyvar_value_row">value</p>
+            </div>
             <div class="pyvar-buttons">
               <button onclick="remove_variable(this)">
                 <span class="material-icons"> cancel </span>
@@ -103,7 +108,7 @@
               </button>
             </div>
           </div>
-          <ul class="pyvar-add_variable_list">
+          <ul class="pyvar-add_variable_list" style="display: none">
             <!-- <li>Пункт списка 1</li> -->
           </ul>
         </div>
@@ -128,7 +133,7 @@
               <marker
                 id="arrow"
                 viewBox="0 0 10 10"
-                refX="5"
+                refX="10"
                 refY="5"
                 markerWidth="20"
                 markerHeight="20"

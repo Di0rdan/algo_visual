@@ -15,6 +15,7 @@ class HTMLVariable {
     objectCopy.style.top = animY(event) + "px";
 
     this.html_obj = objectCopy;
+    this.html_point = objectCopy.children[0];
     this.list_vars = new Map();
     this.input_lines = new Set();
     this.show();
@@ -58,8 +59,21 @@ class HTMLVariable {
       list_var.show();
       this.list_vars.set(name, list_var);
     }
-    this.html_obj.children[0].children[0].textContent =
-      pyobj_map.get(pyid).repr;
+    // textdiv_by_htmlobj(this.html_obj).textContent = pyobj_map.get(pyid).repr;
+    let text_obj = textdiv_by_htmlobj(this.html_obj);
+    let path = this.path[0];
+    for (let var_name of this.path.slice(1)) {
+      if (var_name.charAt(0) != '[') {
+        path = path + '.';
+      }
+      path = path + var_name;
+    }
+    
+    text_obj.children[0].textContent = path;
+    text_obj.children[1].textContent = pyobj_map.get(pyid).repr;
+    
+    
+
 
     this.show();
     return pyid;
@@ -98,9 +112,13 @@ class HTMLVariable {
     }
   }
 
-  highlight(border) {
-    this.html_obj.style.border = border;
+  highlight(outline) {
+    this.html_obj.style.outline = outline;
   }
+}
+
+function textdiv_by_htmlobj(htmlobj) {
+  return htmlobj.children[1].children[0];
 }
 
 function htmlid_by_button(button) {
@@ -112,7 +130,7 @@ function htmlobj_by_button(button) {
 }
 
 function list_by_htmlobj(htmlobj) {
-  return htmlobj.children[1];
+  return htmlobj.children[2];
 }
 
 function remove_variable(button) {
@@ -132,6 +150,7 @@ function show_list(button) {
 
 function highlight(html_obj) {
   //   console.log("global.highlight", html_obj.id);
+  
   animation.highlight_htmlvar(html_obj, "2px solid #0097d2");
 }
 
