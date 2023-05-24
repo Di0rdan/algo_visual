@@ -5,9 +5,17 @@ function highlight_code_line(line_num) {
   return highlightedLine;
 }
 
-python_example_code = `a = []
-b = a
-a.append(a)
+python_example_code = `class Node:
+    
+  def __init__(self):
+      self.neighs = []
+    
+graph = []
+
+graph.append(Node())
+graph.append(Node())
+
+graph[0].neighs.append(graph[1])
 `;
 
 function set_code(code) {

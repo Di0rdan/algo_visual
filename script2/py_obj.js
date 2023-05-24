@@ -20,7 +20,7 @@ class PythonObject {
     this.dfs_for_dfs(this, visited);
   }
 
-  connect(to, var_name) {
+  connect(to, start_name) {
     // console.log("connect:", to, var_name);
     // console.log("from:");
     // for (let [id, htmlvar] of this.htmlvars) {
@@ -33,22 +33,26 @@ class PythonObject {
 
     for (let [id, from_htmlvar] of this.htmlvars) {
       for (let [id, to_htmlvar] of to.htmlvars) {
-        from_htmlvar.add_line(to_htmlvar, var_name);
+        from_htmlvar.add_line(to_htmlvar, start_name);
       }
     }
   }
 
-  dfs(pyobj, visited) {
+  dfs(pyobj, visited, start_name_) {
+    let start_name = start_name_;
     for (let [name, next] of pyobj.outputs) {
       if (visited.has(next.id)) {
         continue;
       }
+      if (!start_name_) {
+        start_name = name;
+      }
       if (next.htmlvars.size != 0) {
-        this.connect(next, name);
+        this.connect(next, start_name);
         continue;
       }
       visited.add(next.id);
-      this.dfs(next, visited);
+      this.dfs(next, visited, start_name);
     }
   }
 
@@ -71,7 +75,7 @@ class PythonObject {
       htmlvar.clear_lines();
     }
     let visited = new Set([this]);
-    this.dfs(this, visited);
+    this.dfs(this, visited, undefined);
   }
 
   clear() {

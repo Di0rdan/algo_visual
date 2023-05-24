@@ -10,11 +10,12 @@ function make_line() {
 }
 
 function update_line(div1, div2, line) {
+  // console.log("update_line:", div1.id, div2.id);
   if (div1.id == div2.id) {
-    line.style.display = 'none';
+    line.style.display = "none";
     return;
   }
-  line.style.display = 'block';
+  line.style.display = "block";
   const rect1 = div1.getBoundingClientRect();
   const rect2 = div2.getBoundingClientRect();
   let anim_area_left = animation_area.getBoundingClientRect().left;

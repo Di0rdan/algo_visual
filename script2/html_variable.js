@@ -10,12 +10,14 @@ class HTMLVariable {
     objectCopy.style.transform = `scale(${scaling})`;
     objectCopy.addEventListener("mousedown", mousedown_moving_callback);
     objectCopy.id = id;
+    // console.log("constructor htmlvar:", id);
     // console.log("set position:", animX(event) + "px", animY(event) + "px");
     objectCopy.style.left = animX(event) + "px";
     objectCopy.style.top = animY(event) + "px";
 
     this.html_obj = objectCopy;
     this.html_point = objectCopy.children[0];
+    this.html_point.id = "point_" + this.html_obj.id;
     this.list_vars = new Map();
     this.input_lines = new Set();
     this.show();
@@ -63,17 +65,14 @@ class HTMLVariable {
     let text_obj = textdiv_by_htmlobj(this.html_obj);
     let path = this.path[0];
     for (let var_name of this.path.slice(1)) {
-      if (var_name.charAt(0) != '[') {
-        path = path + '.';
+      if (var_name.charAt(0) != "[") {
+        path = path + ".";
       }
       path = path + var_name;
     }
-    
     text_obj.children[0].textContent = path;
-    text_obj.children[1].textContent = pyobj_map.get(pyid).repr;
-    
-    
-
+    text_obj.children[1].textContent = pyobj_map.get(pyid).repr.split("#")[0];
+    text_obj.children[2].textContent = pyobj_map.get(pyid).repr.split("#")[1];
 
     this.show();
     return pyid;
@@ -94,6 +93,7 @@ class HTMLVariable {
   add_line(to_htmlvar, var_name) {
     // console.log("to_htmlvar:", to_htmlvar);
     // console.log("var_name:", var_name);
+    // console.log("this:", this);
     this.list_vars.get(var_name).connect(to_htmlvar);
   }
 
@@ -150,7 +150,7 @@ function show_list(button) {
 
 function highlight(html_obj) {
   //   console.log("global.highlight", html_obj.id);
-  
+
   animation.highlight_htmlvar(html_obj, "2px solid #0097d2");
 }
 
